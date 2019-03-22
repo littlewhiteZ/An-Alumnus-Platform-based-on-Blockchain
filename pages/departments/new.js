@@ -19,7 +19,6 @@ class CampaignNew extends Component {
 
         try{
             const accounts = await web3.eth.getAccounts();
-            const owner = await token.methods.owner().call();
     
             await factory.methods
                 .createDepartment(this.state.department)

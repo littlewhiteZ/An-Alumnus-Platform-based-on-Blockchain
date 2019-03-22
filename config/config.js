@@ -19,12 +19,12 @@ const config = {
   contracts: {
     departmentFactory: {
       //private network
-      //address: '0x79d0fAC3Af768d704Be0BeC19f6EFf39319b0463'
       address: '0xb3CfedEFAe12e50E8Ee9A5abAca79BF0E0E376c1'
+      //address: '0xb3CfedEFAe12e50E8Ee9A5abAca79BF0E0E376c1'
     },
     token: {
-      //address: '0x57d5024b60675A1872Fe563b626E9d8003Ff3E42'
       address: '0x8BEfd5b1b86aFC3ACf84BB65Cc1c2a8142F43dca'
+      //address: '0x8BEfd5b1b86aFC3ACf84BB65Cc1c2a8142F43dca'
     }
   },
   ipfs: {

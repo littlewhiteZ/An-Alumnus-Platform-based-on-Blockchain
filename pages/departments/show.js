@@ -74,6 +74,7 @@ class CampaignShow extends Component {
         return this.props.persons.map((person, index)=>{
             return( 
                 <RequestRow 
+                    id={index}
                     key={index}
                     person={person}
                     address={this.props.address}
@@ -89,6 +90,7 @@ class CampaignShow extends Component {
             departmentName,
             personCount
         } = this.props;
+
 
         const items = [
             {
@@ -127,17 +129,17 @@ class CampaignShow extends Component {
 
                     <Grid.Row>
                         <Grid.Column>
-                            <Link route={`/departments/${this.props.address}/persons/new`}>
-                                <a>
-                                    <Button primary>New Person!</Button>
-                                </a>
-                            </Link>
+                            {this.renderPost()}
                         </Grid.Column>
                     </Grid.Row>
 
                     <Grid.Row>
                         <Grid.Column>
-                            {this.renderPost()}
+                            <Link route={`/departments/${this.props.address}/persons/new`}>
+                                <a>
+                                    <Button primary>New Person!</Button>
+                                </a>
+                            </Link>
                         </Grid.Column>
                     </Grid.Row>
 
