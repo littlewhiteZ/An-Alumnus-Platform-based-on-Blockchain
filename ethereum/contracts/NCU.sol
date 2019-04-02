@@ -143,11 +143,11 @@ contract Department {
         string time;
     }
     
-    uint id_level = 1;
-    uint name_level = 1;
-    uint job_level = 1;
-    uint media_level = 1;
-    uint email_level = 1;
+    uint public id_level = 1;
+    uint public name_level = 1;
+    uint public job_level = 1;
+    uint public media_level = 1;
+    uint public email_level = 1;
     
     string departmentName;
     Person[] public persons;
