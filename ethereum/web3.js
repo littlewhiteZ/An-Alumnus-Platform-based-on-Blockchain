@@ -12,7 +12,10 @@ if (typeof window !== 'undefined' && typeof window.web3 !== 'undefined') {
     const provider = new Web3.providers.HttpProvider(
         config.provider.API
     );
-    web3 = new Web3(provider);
+    const options = {
+        transactionConfirmationBlocks: 1
+      };
+    web3 = new Web3(provider,null,options);
 }
 
 export default web3;

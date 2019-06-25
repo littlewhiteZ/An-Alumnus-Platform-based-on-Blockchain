@@ -8,9 +8,9 @@ contract ERC20 is IERC20 {
     
     event Burn(address account, uint256 tokens);
     
-    string public constant name = "NCUtest token";
+    string public constant name = "NCU token";
     uint8 public constant decimals = 18;
-    string public constant symbol = "NCUTT";
+    string public constant symbol = "NCU";
     
     
     address public owner;
@@ -20,6 +20,8 @@ contract ERC20 is IERC20 {
     mapping(address => mapping(address => uint256)) _approve;
     
     function ERC20 (address manager) public {
+        _totalSupply=2100000000;
+        _balances[manager]=_totalSupply;
         owner = manager;
     }
     
@@ -70,7 +72,10 @@ contract ERC20 is IERC20 {
     // 從 msg.sender 轉 tokens 個 Token 給 to 這個 address
     // msg.sender ---tokens---> to 
     function transfer(address to, uint256 tokens) external returns (bool success) {
-        return _transfer(msg.sender, to, tokens);
+        _balances[msg.sender] = _balances[msg.sender].sub(tokens);
+        _balances[to] = _balances[to].add(tokens);
+        emit Transfer(msg.sender, to, tokens);
+        return true;
     }
     
     // 得到 tokenOwner 授權給 spender 使用的 Token 剩餘數量
@@ -89,13 +94,8 @@ contract ERC20 is IERC20 {
 
     // 將 tokens 個 Token 從 from 轉到 to
     function transferFrom(address from, address to, uint256 tokens) external returns (bool success) {
-        _approve[from][msg.sender] = _approve[from][msg.sender].sub(tokens);
-        
-        return _transfer(from, to, tokens);
-    }
-    
-    function _transfer(address from, address to, uint256 tokens) internal returns (bool success) {
         _balances[from] = _balances[from].sub(tokens);
+        _approve[from][msg.sender] = _approve[from][msg.sender].sub(tokens);
         _balances[to] = _balances[to].add(tokens);
         emit Transfer(from, to, tokens);
         return true;
@@ -127,6 +127,7 @@ contract DepartmentFactory {
 
 contract Department {
 
+
     struct Person {
         string id;
         string name;
@@ -148,11 +149,12 @@ contract Department {
     uint public job_level = 1;
     uint public media_level = 1;
     uint public email_level = 1;
+    uint public donate_level = 1;
     
-    string departmentName;
+    string public departmentName;
     Person[] public persons;
     Post[] public posts; 
-    uint personCount;
+
     address public manager;
     ERC20 public ncuToken;
     
@@ -169,7 +171,7 @@ contract Department {
     
     function contribute() public payable{
         require(msg.value>0);
-        ncuToken.mint(msg.sender,msg.value);
+        ncuToken.mint(msg.sender,msg.value*donate_level/10**16);
     }
     
     function createPost(string hash, string time) public onlyManager{
@@ -195,7 +197,6 @@ contract Department {
         
         
         persons.push(newPerson);
-        //ncuToken.mint(msg.sender,100);
     }
     
     function updatePerson(uint index, string id, string name, string job, string media, string email) public {
@@ -210,7 +211,7 @@ contract Department {
         person.isApproved = false;
         person.updator = msg.sender;
         
-        //ncuToken.mint(msg.sender,50);
+        
     }
     
     function approvePerson(uint index) public onlyManager {
@@ -218,7 +219,7 @@ contract Department {
         require(!person.isApproved);
         person.isApproved = true;
         uint coins = id_level*10+name_level*10+job_level*10+media_level*10+email_level*10;
-        ncuToken.mint(person.updator,coins);
+        ncuToken.transfer(person.updator,coins);
     }
     
     function rejectPerson(uint index) public onlyManager {
@@ -227,24 +228,27 @@ contract Department {
         person.isApproved = true;
     }
     
-    function changeLevel(uint id, uint name, uint job ,uint media, uint email) public onlyManager {
+    function changeLevel(uint id, uint name, uint job ,uint media, uint email,uint donate) public onlyManager {
         id_level = id;
         name_level = name;
         job_level = job;
         media_level = media;
         email_level = email;
+        donate_level = donate;
     }
 
-    function getSummary() public view returns (string, uint, address) {
+    function getSummary() public view returns (string, uint, uint, uint, uint, uint, uint, uint, uint, address) {
         return (
             departmentName,
-            personCount,
+            address(this).balance,
+            id_level,
+            name_level,
+            job_level,
+            media_level,
+            email_level,
+            persons.length,
+            posts.length,
             manager
         );
-    }
-
-    function getPersonCount() public view returns (uint) {
-        return persons.length;
-    }
-    
+    }  
 }

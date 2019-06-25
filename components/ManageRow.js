@@ -4,6 +4,7 @@ import web3 from '../ethereum/web3';
 import Department from '../ethereum/department';
 import ipfs from '../utils/ipfs';
 import {Router} from '../routes';
+import measure from '../utils/measure';
 
 class ManageRow extends Component {
 
@@ -38,13 +39,15 @@ class ManageRow extends Component {
         this.setState({approveloading: true, errorMessage: ''});
         try {
             const accounts = await web3.eth.getAccounts();
-            await department.methods
+            await measure('approve person',async()=>{
+                await department.methods
                 .approvePerson(this.props.id)
                 .send({
                     from: accounts[0]
                 });
+            })
 
-            Router.pushRoute('/');
+            Router.pushRoute('/manage/show');
         } catch(err) {
             this.setState({ errorMessage: err.message });
         }
@@ -64,12 +67,15 @@ class ManageRow extends Component {
         this.setState({updateloading: true, errorMessage: ''});
         try {
             const accounts = await web3.eth.getAccounts();
-            await department.methods
+            await measure('update person',async ()=>{
+                await department.methods
                 .updatePerson(this.props.id,this.state.id,this.state.name,this.state.job,this.state.media,this.state.email)
                 .send({
                     from: accounts[0]
                 });
-            Router.pushRoute('/');
+            });
+           
+            Router.pushRoute('/manage/show');
         } catch(err) {
             this.setState({ errorMessage: err.message });
         }
@@ -84,12 +90,15 @@ class ManageRow extends Component {
         this.setState({rejectloading: true, errorMessage: ''});
         try {
             const accounts = await web3.eth.getAccounts();
-            await department.methods
+            await measure('reject person',async()=>{
+                await department.methods
                 .rejectPerson(this.props.id)
                 .send({
                     from: accounts[0]
                 });
-            Router.pushRoute('/');
+            });
+            
+            Router.pushRoute('/manage/show');
         } catch(err) {
             this.setState({ errorMessage: err.message });
         }

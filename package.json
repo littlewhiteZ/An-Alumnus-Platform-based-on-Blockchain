@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --timeout 10000",
     "dev": "node server.js"
   },
   "author": "",
@@ -12,6 +12,7 @@
   "dependencies": {
     "braft-editor": "^2.2.5",
     "css-loader": "^2.1.0",
+    "faker": "^4.1.0",
     "fs-extra": "^7.0.0",
     "ganache-cli": "^6.1.8",
     "ipfs-api": "^21.0.0",

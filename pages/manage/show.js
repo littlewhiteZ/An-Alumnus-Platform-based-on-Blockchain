@@ -8,39 +8,60 @@ import { Link } from '../../routes';
 import ManageRow from '../../components/ManageRow';
 import Editor from '../../components/Editor';
 import ipfs from '../../utils/ipfs';
+import measure from '../../utils/measure';
 
 class CampaignShow extends Component {
 
     state={
         posthtml: '',
         post: '',
-        id_level: 1,
-        name_level: 1,
-        job_level: 1,
-        media_level: 1,
-        email_level: 1,
+
+        persons:[],
+        manager:'',
+        departmentName:'',
+        personCount:0,
+        balance:0,
+
+        id_level: 0,
+        name_level: 0,
+        job_level: 0,
+        media_level: 0,
+        email_level: 0,
+
         errorMessage: '',
         errorvisible: true,
+        changeloading: false,
         loading: false
     };
     static async getInitialProps(props){
-        const department = Department(props.query.address);
-
+       
+        return {address:props.query.address};
+    }
+    async componentDidMount() {
+        
+        const department = Department(this.props.address);
         const summary = await department.methods.getSummary().call();
-        const count = await department.methods.getPersonCount().call();
-        const persons = await Promise.all(
-            Array(parseInt(count)).fill().map((element, index) => {
-                return department.methods.persons(index).call()
-            })
-        );
+        
+        const persons = 
+            await Promise.all(
+                Array(parseInt(summary[7])).fill().map((element, index) => {
+                    return department.methods.persons(index).call()
+                })
+            );
 
-        return{
-            address: props.query.address,
+
+        this.setState({
             departmentName: summary[0],
-            personCount: count,
-            manager: summary[2],
-            persons: persons
-        };
+            personCount: summary[7],
+            manager: summary[9],
+            persons: persons,
+            balance: web3.utils.fromWei(summary[1],'ether'),
+            id_level: summary[2],
+            name_level: summary[3],
+            job_level: summary[4],
+            media_level: summary[5],
+            email_level: summary[6]
+        });
     }
 
     onHTMLChange = html => {
@@ -82,11 +103,13 @@ class CampaignShow extends Component {
 
         try {
             const accounts = await web3.eth.getAccounts();
-            //await department.methods
-              //  .createPost(post,currentDateTime)
-                //.send({from: accounts[0]});
-
-            //Router.pushRoute("/manage/index");
+            await measure('create a post',async ()=>{
+                await department.methods
+                .createPost(post,currentDateTime)
+                .send({from: accounts[0]});
+            });
+            
+            Router.pushRoute("/manage/show");
         } catch (err) {
             this.setState({errorMessage: err.message});
         }
@@ -95,10 +118,30 @@ class CampaignShow extends Component {
         
     };
 
-    handleChange = e => this.setState({ idlevel: e.target.value });
+    changeLevel = async (event) => {
+        event.preventDefault();
+        
+        const department = Department(this.props.address);
+
+        this.setState({changeloading:true,errorMessage: ''});
+
+        try {
+            const accounts = await web3.eth.getAccounts();
+            await department.methods
+                .changeLevel(this.state.id_level,this.state.name_level,this.state.job_level,this.state.media_level,this.state.email_level)
+                .send({from: accounts[0]});
+
+            Router.pushRoute("/manage/show");
+        } catch (err) {
+            this.setState({errorMessage: err.message});
+        }
+
+        this.setState({changeloading: false});
+        
+    }
 
     renderRow(){
-        return this.props.persons.map((person, index)=>{
+        return this.state.persons.map((person, index)=>{
             return( 
                 <ManageRow 
                     id={index}
@@ -113,16 +156,21 @@ class CampaignShow extends Component {
     renderCards() {
 
         const {
-            manager,
+            balance,
             departmentName,
             personCount
-        } = this.props;
+        } = this.state;
 
         const items = [
             {
                 header: departmentName,
                 meta: '系級',
                 description: '哪一年哪一級'
+            },
+            {
+                header: balance,
+                meta: '捐獻基金',
+                description: '(eth)'
             },
             {
                 header: personCount,
@@ -134,11 +182,11 @@ class CampaignShow extends Component {
                     <div>
                         <div>學號 Level: {this.state.id_level}</div>
                         <input type='range' min={1} max={5} value={this.state.id_level} onChange={event=>this.setState({ id_level: event.target.value })} />
-                        <div color="blue">名字 Level: {this.state.name_level}</div>
+                        <div>名字 Level: {this.state.name_level}</div>
                         <input type='range' min={1} max={5} value={this.state.name_level} onChange={event=>this.setState({ name_level: event.target.value })} />
                         <div>職稱 Level: {this.state.job_level}</div>
                         <input type='range' min={1} max={5} value={this.state.job_level} onChange={event=>this.setState({ job_level: event.target.value })} />
-                        <Button primary floated="right">change</Button>
+                        <Button primary onClick={this.changeLevel} loading={this.state.changeloading} floated="right">change</Button>
                         <div>社群媒體 Level: {this.state.media_level}</div>
                         <input type='range' min={1} max={5} value={this.state.media_level} onChange={event=>this.setState({ media_level: event.target.value })} />
                         <div>email Level: {this.state.email_level}</div>

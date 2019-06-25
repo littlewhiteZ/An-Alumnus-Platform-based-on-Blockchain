@@ -5,6 +5,7 @@ import factory from '../../ethereum/factory';
 import token from '../../ethereum/token';
 import web3 from '../../ethereum/web3';
 import {Router} from '../../routes';
+import measure from '../../utils/measure';
 
 class CampaignNew extends Component {
     state = {
@@ -19,12 +20,14 @@ class CampaignNew extends Component {
 
         try{
             const accounts = await web3.eth.getAccounts();
-    
-            await factory.methods
+
+            await measure('create department',async ()=>{
+                await factory.methods
                 .createDepartment(this.state.department)
                 .send({
                     from: accounts[0]
                 });
+            });
                 
             Router.pushRoute('/');
         } catch(err) {

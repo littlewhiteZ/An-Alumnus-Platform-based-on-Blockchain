@@ -4,6 +4,7 @@ import web3 from '../ethereum/web3';
 import Department from '../ethereum/department';
 import ipfs from '../utils/ipfs';
 import {Router} from '../routes';
+import measure from '../utils/measure';
 
 class RequestRow extends Component {
     state = {
@@ -35,11 +36,13 @@ class RequestRow extends Component {
         this.setState({updateloading: true, errorMessage: ''});
         try {
             const accounts = await web3.eth.getAccounts();
-            await department.methods
+            await measure('update person',async ()=>{
+                await department.methods
                 .updatePerson(this.props.id,this.state.id,this.state.name,this.state.job,this.state.media,this.state.email)
                 .send({
                     from: accounts[0]
                 });
+            });
             Router.pushRoute('/');
         } catch(err) {
             this.setState({ errorMessage: err.message });

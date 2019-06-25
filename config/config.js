@@ -9,8 +9,8 @@ const config = {
     privateKey: '8e81945e642d39437afbd3c53fb9caeee6097b15786968cfbf8c54022417610d'
   },
   provider: {
-    //API: 'https://rinkeby.infura.io/30743f4e6c2f4e5bad6d2d1731cd1c2a',
-    API: 'http://140.115.52.54:8545', // private network
+    API: 'https://rinkeby.infura.io/30743f4e6c2f4e5bad6d2d1731cd1c2a',
+    //API: 'http://140.115.52.54:8545', // private network
     // API: 'http://localhost:8545',
     infura: {
       API_key: '30743f4e6c2f4e5bad6d2d1731cd1c2a'
@@ -19,12 +19,19 @@ const config = {
   contracts: {
     departmentFactory: {
       //private network
-      address: '0xb3CfedEFAe12e50E8Ee9A5abAca79BF0E0E376c1'
-      //address: '0xb3CfedEFAe12e50E8Ee9A5abAca79BF0E0E376c1'
+      //address: '0xcBE63A8B7e00B1259359Dd332E845b25850FB1b5'
+      //address: '0xD06fe62C9ADB4B7bEd5BcADdc2f46ba556281174'
+      
+      //Rinkby test network
+      address: '0x0e6369548ef47efd74fc22307b1737505a3dd7f3'
     },
     token: {
-      address: '0x8BEfd5b1b86aFC3ACf84BB65Cc1c2a8142F43dca'
-      //address: '0x8BEfd5b1b86aFC3ACf84BB65Cc1c2a8142F43dca'
+      //private network
+      //address: '0xfC35139aded0d9Fe8FFC7f41619D297735731653'
+      //address: '0x355BC8d9057a6718A82f19C205Dfdf895E6ccAEA'
+
+      //Rinkby test network
+      address: '0x73D04Ae1C73d982EF6B1f78FEefA27B5Da57bF76'
     }
   },
   ipfs: {

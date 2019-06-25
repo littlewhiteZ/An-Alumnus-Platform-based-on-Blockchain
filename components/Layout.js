@@ -5,13 +5,13 @@ import Header from './Header';
 
 export default props => {
     return (
-        <Container>
+        <Container fluid>
             <Head>
             <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css"></link>
             </Head>
 
             <Header />
-            {props.children}
+            <Container style={{width: '80%'}}>{props.children}</Container>
         </Container>
     );
 };
