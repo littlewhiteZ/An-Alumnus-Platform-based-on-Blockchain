@@ -1,17 +1,16 @@
 //const CampaignFactory = require('../ethereum/build/CampaignFactory.json');
 const config = {
   account: {
-    address: '0xD07cEfefB35600Ea6F2839693017F63F414d859E',
-    //address: '0xB6050B37AA9Fcc16BB2F533dc9c29288C7A41D78',
+    address: '@your metamask address',
+    
     mnemonic:
-      'gaze slice chief syrup lab age truly about cupboard derive supreme cement',
-      //'moral fog learn alcohol popular ripple minute choose proud come jealous air',
-    privateKey: '8e81945e642d39437afbd3c53fb9caeee6097b15786968cfbf8c54022417610d'
+      '@your metamask mnemonic',
+      
+    privateKey: '@your metamask private key'
   },
   provider: {
     API: 'https://rinkeby.infura.io/30743f4e6c2f4e5bad6d2d1731cd1c2a',
-    //API: 'http://140.115.52.54:8545', // private network
-    // API: 'http://localhost:8545',
+    //API: 'http://', // private network
     infura: {
       API_key: '30743f4e6c2f4e5bad6d2d1731cd1c2a'
     }
