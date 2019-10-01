@@ -18,8 +18,8 @@ Architecture
 Sart
 ----
 
-1.use compile.js to compile .sol
-2.deploy contract on blockchain
-3.localhost:3000
+1. use compile.js to compile .sol
+2. deploy contract on blockchain
+3. localhost:3000
 
 you can compile & deploy contract on Remix(recommend!)
