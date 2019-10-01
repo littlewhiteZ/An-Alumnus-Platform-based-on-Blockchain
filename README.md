@@ -22,4 +22,4 @@ Sart
 2. deploy contract on blockchain
 3. localhost:3000
 
-you can compile & deploy contract on Remix(recommend!)
+you can use Remix to compile & deploy contract(recommend!)
